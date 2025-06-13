@@ -353,8 +353,6 @@ def create_page(html, title, output="output.html", startfile=True):
 
 
 def test_heatmap():
-    import datetime
-    import math
     from html import escape
 
     import pandas as pd
