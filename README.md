@@ -7,6 +7,8 @@ It allows you to easily add comments to event data.
 <p align="center">
 <img src="tabheatcal.gif"   height="400" style="max-width: 100%;max-height: 100%;">
 </p>
+See working example:
+<a href="https://htmlpreview.github.io/?https://github.com/ts-kontakt/tabheatcal/blob/master/SP500.html" target="_blank">Exmaple</a>
 
 See the example below.
 
