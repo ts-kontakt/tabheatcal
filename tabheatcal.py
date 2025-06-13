@@ -7,6 +7,7 @@ import math
 import os
 import re
 import sys
+import subprocess
 
 import numpy as np
 
@@ -397,7 +398,7 @@ def test_heatmap():
         2025, 4, 9))] += escape(';tweet: <i class="emph">"THIS IS A GREAT TIME TO BUY!!! DJT"</i>')
 
     html = table_html(dates, values, labels)
-    create_page(html, title=f"SP500 daily calendar heat", "SP500.html", startfile=True)
+    create_page(html, title=f"SP500 daily calendar heat", output="SP500.html", startfile=True)
 
 
 if __name__ == "__main__":
