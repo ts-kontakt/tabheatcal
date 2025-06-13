@@ -380,7 +380,6 @@ def test_heatmap():
     prices = get_prices()
     df = pd.DataFrame(prices, columns=["date", "price"])
     df["p_chng"] = df["price"].pct_change() * 100
-    all_days = pd.date_range(df.index.min(), df.index.max(), freq="D")
     df.set_index("date", inplace=True)
     all_days = pd.date_range(df.index.min(), df.index.max(), freq="D")
     full_df = df.reindex(all_days)
