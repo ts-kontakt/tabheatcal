@@ -20,15 +20,17 @@ tabheatcal.create_page(html, title="SP500 daily calendar heat", output="SP500.ht
 
 
 As you can see in the example below - the visualizations are exceptionally elegant ;-) <br>
-<i>everything is based on old html/css tables</i>
+<i>(everything is based on old html/css tables)</i>
 
 
-<p align="center">
+<p align="left">
 <img src="tabheatcal.gif"   height="350" style="max-width: 100%;max-height: 100%;">
 </p>
 See working example:
 <br>
 <a href="https://htmlpreview.github.io/?https://github.com/ts-kontakt/tabheatcal/blob/master/SP500.html" target="_blank">SP500 percent changes</a>
+
+Result is easy to publish in an interactive form - the generated page is a regular separate html file
 
 Full working python code for above.
 
