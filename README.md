@@ -1,8 +1,15 @@
 # tabheatcal - Heatmap visualization with easy value inspection
 
 Tabheatcal is a python module that lets you create a nice looking heat map calendar with the ability to inspect individual values.
-
 You can also easily add comments to particularly important events.
+
+As you can see in the example below - the visualizations are exceptionally elegant ;-) <br>
+<i>(everything is based on old html/css tables)</i>
+
+
+<p align="left">
+<img src="tabheatcal1.gif"   height="350" style="max-width: 100%;max-height: 100%;">
+</p>
 
 The basic function requires three arguments:
 
@@ -19,13 +26,8 @@ tabheatcal.create_page(html, title="SP500 daily calendar heat", output="SP500.ht
 ```
 
 
-As you can see in the example below - the visualizations are exceptionally elegant ;-) <br>
-<i>(everything is based on old html/css tables)</i>
 
 
-<p align="left">
-<img src="tabheatcal1.gif"   height="350" style="max-width: 100%;max-height: 100%;">
-</p>
 See working example:
 <br>
 
