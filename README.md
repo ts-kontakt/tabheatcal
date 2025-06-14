@@ -29,7 +29,7 @@ As you can see in the example below - the visualizations are exceptionally elega
 See working example:
 <br>
 
-<a href="https://html-preview.github.io/?url=?https://github.com/ts-kontakt/tabheatcal/blob/master/SP500.html" target="_blank">SP500 percent changes</a>
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/SP500.html" target="_blank">SP500 percent changes</a>
 
 Result is easy to publish in an interactive form - the generated page is a regular separate html file
 
