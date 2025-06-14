@@ -1,13 +1,16 @@
 #!/usr/bin/python
-# -*- coding: UTF8 -*-
+# coding=utf-8'
+#
+# Copyright (c)  Tomasz Sługocki ts.kontakt@gmail.com
+# This code is licensed under Apache 2.0
 import calendar
 import datetime
 import json
 import math
 import os
 import re
-import sys
 import subprocess
+import sys
 
 import numpy as np
 
@@ -18,10 +21,13 @@ strftime = datetime.datetime.strftime
 TEMPLATE = "_template.html"
 EMPTY_CELL = "empty"
 
+WEEKDAYS_NAMES = calendar.day_name
+WEEKDAYS_ORDER = (6, 0, 1, 2, 3, 4, 5, )
+
 
 def get_distance(x, y):
     try:
-        return math.sqrt((x - y)**2)
+        return math.sqrt((x - y) ** 2)
     except ValueError:
         return 0
 
@@ -39,18 +45,6 @@ def open_file(filename):
     else:
         opener = "open" if sys.platform == "darwin" else "xdg-open"
         subprocess.call([opener, filename])
-
-
-WEEKDAYS_NAMES = calendar.day_name
-WEEKDAYS_ORDER = [
-    6,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-]
 
 
 def set_days(year, starting_month=1, end_month=12):
@@ -75,7 +69,6 @@ def set_days(year, starting_month=1, end_month=12):
 
 
 def year_table(current_year, start_month=1, end_month=12, color_object=None):
-
     def make_cell(inner_html, style="", rel="", id=""):
         if style:
             style = f'style="{style}"'
@@ -93,7 +86,9 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
     left_top_border = "border-left:black 1px solid;border-top:black 1px solid;"
     top_border = "border-top:gray 1px solid;"
 
-    weekdays_data = set_days(current_year, starting_month=start_month, end_month=end_month)
+    weekdays_data = set_days(
+        current_year, starting_month=start_month, end_month=end_month
+    )
     first_day_of_year = datetime.date(current_year, start_month, 1)
 
     if first_day_of_year.weekday() != 6:
@@ -110,9 +105,12 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
             if date_item != EMPTY_CELL:
                 is_empty = False
                 date_string_key = strftime(date_item, "%Y-%m-%d")
-                background_color = color_object.get(date_string_key, {}).get("color", "white")
-                date_display_string = color_object.get(date_string_key,
-                                                       {}).get("info", date_string_key)
+                background_color = color_object.get(date_string_key, {}).get(
+                    "color", "white"
+                )
+                date_display_string = color_object.get(date_string_key, {}).get(
+                    "info", date_string_key
+                )
                 current_month = date_item.month
                 current_day = date_item.day
             else:
@@ -122,7 +120,9 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
                 current_month = 0
                 previous_month = None
                 current_day = 0
-            css_color_styles = (f"background:{background_color};color:{background_color};")
+            css_color_styles = (
+                f"background:{background_color};color:{background_color};"
+            )
 
             cell_style = css_color_styles
             if previous_month != current_month and is_empty != True:
@@ -139,15 +139,21 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
                 cell_inner_html = "@"
                 cell_style = "border:white 1px solid;"
 
-            table_cell = make_cell(cell_inner_html, style=cell_style, rel=date_display_string)
+            table_cell = make_cell(
+                cell_inner_html, style=cell_style, rel=date_display_string
+            )
 
-            saturday_first_day = (weekday == 5 and current_month != start_month and
-                                  previous_month != current_month)
+            saturday_first_day = (
+                weekday == 5
+                and current_month != start_month
+                and previous_month != current_month
+            )
 
             if saturday_first_day:
-                # print(current_year,previous_month)
                 if previous_month:
-                    month_name = strftime(datetime.datetime(current_year, previous_month, 1), "%b")
+                    month_name = strftime(
+                        datetime.datetime(current_year, previous_month, 1), "%b"
+                    )
                 else:
                     month_name = "__"
 
@@ -155,8 +161,10 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
 
                 # for years starting with  Sunday we need add extra th row
                 if first_day_of_year.weekday() == 6 and previous_month == 1:
-                    bottom_header_string = ('<th style="color:gray;" scope="row">_</th> ' +
-                                            bottom_header_string)
+                    bottom_header_string = (
+                        '<th style="color:gray;" scope="row">_</th> '
+                        + bottom_header_string
+                    )
 
                 bottom_table_headers.append(bottom_header_string)
                 bottom_column_span = 0
@@ -169,14 +177,14 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
         table_header_row = f'<th scope="row">{WEEKDAYS_NAMES[weekday]}</th>'
         if weekday in (5, 6):
             table_header_row = (
-                f'<th style="color:gray;" scope="row">{WEEKDAYS_NAMES[weekday]}</th>')
+                f'<th style="color:gray;" scope="row">{WEEKDAYS_NAMES[weekday]}</th>'
+            )
 
         table_rows.append(make_row(table_header_row + "".join(table_cells)))
 
-    bottom_header_string = f'<td colspan="{bottom_column_span}"><span class="bott_cal_th">{
-        strftime(
-            date_item,
-            "%b")}</span></td>'
+    bottom_header_string = f'<td colspan="{
+        bottom_column_span
+    }"><span class="bott_cal_th">{strftime(date_item, "%b")}</span></td>'
 
     bottom_table_headers.append(bottom_header_string)
 
@@ -226,8 +234,9 @@ def get_colorkey(colors, divisions, values=[], labels=[]):
     }}
     </style>
     """
-    tick_html = (f' <div class="colorkey_tick" style="top:-0.5em;right:0;">{max_label}</div>')
-    print(["val_range", val_range, val_range / 2.0])
+    tick_html = (
+        f' <div class="colorkey_tick" style="top:-0.5em;right:0;">{max_label}</div>'
+    )
     mid_val = val_range / 2.0
     mid_label = 0
     for v, label in sorted(zip(values, labels), reverse=True):
@@ -260,7 +269,6 @@ def get_colorkey(colors, divisions, values=[], labels=[]):
 
 
 def get_colors_data(values, dates, palette, to_display):
-
     def reject_outliers(data, m=4):
         return data[abs(data - np.mean(data)) < m * np.std(data)]
 
@@ -272,7 +280,6 @@ def get_colors_data(values, dates, palette, to_display):
     min_ret = np.nanmin(stats_data)
 
     overall_rng = get_distance(min_ret, max_ret)
-    print(overall_rng, min_ret, max_ret)
 
     palette_len = len(palette)
     colors_dict = {}
@@ -314,7 +321,6 @@ def table_html(dates, values, labels, colors=assets.RdYlGn):
 
         if values[i] == max_value:
             special_dates[date] = "max_value"
-            print("max", date)
         elif values[i] == min_value:
             special_dates[date] = "min_value"
 
@@ -344,7 +350,9 @@ def create_page(html, title, output="output.html", startfile=True):
     assert "<table" in html
     from jinja2 import Environment, FileSystemLoader
 
-    env = Environment(loader=FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
+    env = Environment(
+        loader=FileSystemLoader(os.path.dirname(os.path.abspath(__file__)))
+    )
     template = env.get_template(TEMPLATE)
     result = template.render({"title": title, "chart_data": html})
     with open(output, "w") as f:
@@ -358,7 +366,6 @@ def test_heatmap():
     import pandas as pd
     import requests
 
-    # yahoo finance still down?
     def get_prices():
         datetime.datetime.today().strftime("%Y-%m-%d")
         url = "https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23ebf3fb&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1320&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=SP500&scale=left&cosd=2020-06-12&coed=2025-06-12&line_color=%230073e6&link_values=false&line_style=solid&mark_type=none&mw=3&lw=3&ost=-99999&oet=99999&mma=0&fml=a&fq=Daily%2C%20Close&fam=avg&fgst=lin&fgsnd=2020-02-01&line_index=1&transformation=lin&vintage_date={today}&revision_date={today}&nd=2015-06-15"
@@ -384,18 +391,24 @@ def test_heatmap():
     all_days = pd.date_range(df.index.min(), df.index.max(), freq="D")
     full_df = df.reindex(all_days)
     selected = full_df["2021-01-01":"2025-12-31"]
-    print(selected)
+    # print(selected)
     dates = [pd.to_datetime(date) for date in selected.index.values]
     values = selected.p_chng.values.tolist()
-    labels = ["%.2f%%" % val if not math.isnan(val) else "n/d" for val in selected.p_chng.values]
+    labels = [
+        "%.2f%%" % val if not math.isnan(val) else "n/d"
+        for val in selected.p_chng.values
+    ]
 
     # Mark some important events
     labels[dates.index(datetime.datetime(2025, 4, 3))] += "; <i>Tariffs announced!</i>"
-    labels[dates.index(datetime.datetime(
-        2025, 4, 9))] += escape(';tweet: <i class="emph">"THIS IS A GREAT TIME TO BUY!!! DJT"</i>')
+    labels[dates.index(datetime.datetime(2025, 4, 9))] += escape(
+        ';tweet: <i class="emph">"THIS IS A GREAT TIME TO BUY!!! DJT"</i>'
+    )
 
     html = table_html(dates, values, labels)
-    create_page(html, title=f"SP500 daily calendar heat", output="SP500.html", startfile=True)
+    create_page(
+        html, title=f"SP500 daily calendar heat", output="SP500.html", startfile=True
+    )
 
 
 if __name__ == "__main__":
