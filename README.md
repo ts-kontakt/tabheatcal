@@ -8,7 +8,7 @@ As you can see in the example below - the visualizations are exceptionally elega
 
 
 <p align="left">
-<img src="tabheatcal1.gif"   height="350" style="max-width: 100%;max-height: 100%;">
+<img src="tabheatcal1.gif"   width="350" style="max-width: 100%;max-height: 100%;">
 </p>
 
 The basic function requires three arguments:
