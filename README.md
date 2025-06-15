@@ -35,7 +35,7 @@ See working examples:
 NASDAQ Composite (^IXIC) daily calendar heat</a>
 </p>
 <p>
-<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions" target="_blank">
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions.html" target="_blank">
 Tesla daily transactions</a>
 </p>
 
