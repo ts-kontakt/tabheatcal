@@ -28,11 +28,16 @@ tabheatcal.create_page(html, title="SP500 daily calendar heat", output="SP500.ht
 
 
 
-See working example:
-<br>
+See working examples:
+<p>
 
 <a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/NASDAQ.html" target="_blank">
 NASDAQ Composite (^IXIC) daily calendar heat</a>
+</p>
+<p>
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions" target="_blank">
+Tesla daily transactions</a>
+</p>
 
 Result is easy to publish in an interactive form - the generated page is a regular separate html file
 
@@ -48,16 +53,14 @@ ticker_symbol = "^IXIC"
 df = yf.download(ticker_symbol, period="3y")
 
 df["p_chng"] = df["Close"].pct_change() * 100
-dates = [pd.to_datetime(date) for date in df.index.values]
+dates = [pd.to_datetime(date).date() for date in df.index.values]
 values = df.p_chng.values.tolist()
 labels = [
-    '%+.2f %%' % val if not math.isnan(val) else "n/d"
-    for val in df.p_chng.values
+    "%+.2f %%" % val if not math.isnan(val) else "n/d" for val in df.p_chng.values
 ]
-
 # Mark some important events
-tariffs_day = datetime.datetime(2025, 4, 3)
-tariffs_delayed = datetime.datetime(2025, 4, 9)
+tariffs_day = datetime.date(2025, 4, 3)
+tariffs_delayed = datetime.date(2025, 4, 9)
 labels[dates.index(tariffs_day)] += "; <i>Tariffs announced!</i>"
 labels[dates.index(tariffs_delayed)] += escape(
     ';tweet: <i class="emph">"THIS IS A GREAT TIME TO BUY!!! DJT"</i>'
@@ -65,6 +68,9 @@ labels[dates.index(tariffs_delayed)] += escape(
 
 html = table_html(dates, values, labels)
 create_page(
-    html, title=f"NASDAQ Composite (^IXIC) daily calendar heat", output="NASDAQ.html", startfile=True
+    html,
+    title=f"NASDAQ Composite (^IXIC) daily calendar heat",
+    output="NASDAQ.html",
+    startfile=True,
 )
 ```
