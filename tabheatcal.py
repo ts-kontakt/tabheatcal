@@ -300,7 +300,6 @@ def get_colors_data(values, dates, palette, to_display):
                 colors_position = palette_len - 1
 
             colors_dict[day] = {"color": palette[colors_position], "info": final_str}
-    # stop5
     return colors_dict
 
 
@@ -361,17 +360,20 @@ def create_page(html, title, output="output.html", startfile=True):
 
 
 def test_heatmap():
-    from html import escape
 
     import pandas as pd
     import requests
 
+    # alternative download
     def get_prices():
         datetime.datetime.today().strftime("%Y-%m-%d")
         url = "https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23ebf3fb&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1320&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=SP500&scale=left&cosd=2020-06-12&coed=2025-06-12&line_color=%230073e6&link_values=false&line_style=solid&mark_type=none&mw=3&lw=3&ost=-99999&oet=99999&mma=0&fml=a&fq=Daily%2C%20Close&fam=avg&fgst=lin&fgsnd=2020-02-01&line_index=1&transformation=lin&vintage_date={today}&revision_date={today}&nd=2015-06-15"
 
         response = requests.get(url, headers={"User-agent": "Mozilla/5.0"}).text
-        def parse_date(date_str): return datetime.datetime.strptime(date_str, "%Y-%m-%d")
+
+        def parse_date(date_str):
+            return datetime.datetime.strptime(date_str, "%Y-%m-%d")
+
         data = []
         for row in response.split("\n")[1:]:
             values = row.split(",")
@@ -411,5 +413,37 @@ def test_heatmap():
     )
 
 
+def test_yfinance():
+    from html import escape
+    import pandas as pd
+    import yfinance as yf
+    ticker_symbol = "^IXIC"
+
+    # Valid periods: "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"
+    df = yf.download(ticker_symbol, period="3y")
+
+    df["p_chng"] = df["Close"].pct_change() * 100
+    dates = [pd.to_datetime(date) for date in df.index.values]
+    values = df.p_chng.values.tolist()
+    labels = [
+        '%+.2f %%' % val if not math.isnan(val) else "n/d"
+        for val in df.p_chng.values
+    ]
+
+    # Mark some important events
+    tariffs_day = datetime.datetime(2025, 4, 3)
+    tariffs_delayed = datetime.datetime(2025, 4, 9)
+    labels[dates.index(tariffs_day)] += "; <i>Tariffs announced!</i>"
+    labels[dates.index(tariffs_delayed)] += escape(
+        ';tweet: <i class="emph">"THIS IS A GREAT TIME TO BUY!!! DJT"</i>'
+    )
+
+    html = table_html(dates, values, labels)
+    create_page(
+        html, title=f"NASDAQ Composite (^IXIC) daily calendar heat", output="NASDAQ.html", startfile=True
+    )
+
+
 if __name__ == "__main__":
-    test_heatmap()
+    # test_heatmap()
+    test_yfinance()
