@@ -8,7 +8,7 @@ As you can see in the example below - the visualizations are exceptionally elega
 
 
 <p align="left">
-<img src="tabheatcal.gif"   width="550" style="max-width: 100%;max-height: 100%;">
+<img src="examples/tabheatcal.gif"   width="550" style="max-width: 100%;max-height: 100%;">
 </p>
 
 The basic function requires three arguments:
@@ -31,11 +31,11 @@ tabheatcal.create_page(html, title="SP500 daily calendar heat", output="SP500.ht
 See working examples:
 <p>
 
-<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/NASDAQ.html" target="_blank">
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/examples/NASDAQ.html" target="_blank">
 NASDAQ Composite (^IXIC) daily calendar heat</a>
 </p>
 <p>
-<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions.html" target="_blank">
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/examples/transactions.html" target="_blank">
 Tesla daily transactions</a>
 </p>
 
