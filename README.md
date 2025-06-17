@@ -4,7 +4,7 @@ Tabheatcal is a python module that lets you create a nice looking heat map calen
 You can also easily add comments to particularly important events.
 
 As you can see in the example below - the visualizations are exceptionally elegant ;-) <br>
-<i>(everything is based on old html/css tables)</i>
+<i>(markup is hand-crafted html and css using tables)</i>
 
 
 <p align="left">
@@ -49,7 +49,6 @@ import pandas as pd
 import yfinance as yf
 ticker_symbol = "^IXIC"
 
-# Valid periods: "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"
 df = yf.download(ticker_symbol, period="3y")
 
 df["p_chng"] = df["Close"].pct_change() * 100
