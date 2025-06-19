@@ -440,6 +440,46 @@ def test_yfinance():
     create_page(
         html, title=f"NASDAQ Composite (^IXIC) daily calendar heat", output="NASDAQ.html", startfile=True
     )
+def test_polygon_api():
+    millnames = ["", " K", " M", " B", " T"]
+
+    # credits: https://stackoverflow.com/questions/3154460/python-human-readable-large-numbers
+    def millify(n):
+        n = float(n)
+        millidx = max(
+            0,
+            min(
+                len(millnames) - 1,
+                int(math.floor(0 if n == 0 else math.log10(abs(n)) / 3)),
+            ),
+        )
+
+        return "{:.1f}{}".format(n / 10 ** (3 * millidx), millnames[millidx])
+
+    from polygon import RESTClient
+    apikey = "enter your key"
+    client = RESTClient(apikey) 
+    ticker = "TSLA"
+    outlist = []
+    for a in client.list_aggs(
+            ticker=ticker,
+            multiplier=1,
+            timespan="day",
+            from_=datetime.datetime(2023, 1, 1),
+            to=datetime.datetime.today()):
+        py_date = datetime.datetime.fromtimestamp(a.timestamp / 1000).date()
+        outlist.append([py_date, a.transactions])
+        # vols.append(a.volume)
+    import pandas as pd
+
+    df = pd.DataFrame(outlist, columns=["ptime", "trans"])
+
+    df.set_index("ptime", inplace=True)
+    dates = [pd.to_datetime(date)for date in df.index.values]
+    values = [int(x) for x in df.trans.values.tolist()]
+    labels = [millify(val) if not math.isnan(val) else "n/d" for val in df.trans.values]
+    html = table_html(dates, values, labels, colors=assets.Blues)
+    create_page(html, title=f"{ticker} daily transactions", output=f"transactions.html")
 
 
 if __name__ == "__main__":
