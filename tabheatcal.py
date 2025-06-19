@@ -310,8 +310,6 @@ def table_html(dates, values, labels, colors=assets.RdYlGn):
     max_value = np.nanmax(values)
     min_value = np.nanmin(values)
 
-    # print(max_value, min_value)
-    # stop
     year_dict = {}
     special_dates = {}
 
@@ -360,6 +358,7 @@ def create_page(html, title, output="output.html", startfile=True):
 
 
 def test_heatmap():
+    from html import escape
 
     import pandas as pd
     import requests
@@ -419,7 +418,6 @@ def test_yfinance():
     import yfinance as yf
     ticker_symbol = "^IXIC"
 
-    # Valid periods: "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"
     df = yf.download(ticker_symbol, period="3y")
 
     df["p_chng"] = df["Close"].pct_change() * 100
