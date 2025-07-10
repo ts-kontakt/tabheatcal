@@ -76,7 +76,7 @@ tabheatcal.create_page(
 
 ### `table_html(dates, values, labels, palette="RdYlGn")`
 
-Generates the HTML table for the heatmap calendar.
+The table_html() function returns raw HTML that can be embedded directly into web frameworks without creating separate files:
 
 **Parameters:**
 - `dates` (list): List of datetime.date objects
