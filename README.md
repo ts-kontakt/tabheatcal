@@ -108,11 +108,16 @@ Available color palettes include:
 **Note:** The module automatically detects and handles outliers in your data using statistical methods (values beyond 4 standard deviations from the mean). However, for very noisy datasets, it's recommended to normalize or preprocess your data before visualization to ensure optimal color mapping and visual clarity.
 
 ## Live Examples
-
+Note: The interactive features (hover tooltips, etc.) may not work in GitHub's HTML preview due to JavaScript restrictions. Download the HTML files and open them locally for full functionality.
 <p>
 <a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/NASDAQ.html" target="_blank">
 📈 NASDAQ Composite (^IXIC) Daily Calendar Heat</a>
 </p>
+
+Using Polygon API for Financial Data
+Here's an example showing daily transaction volume.
+
+
 <p>
 <a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions.html" target="_blank">
 📊 Tesla Daily Transactions Volume</a>
