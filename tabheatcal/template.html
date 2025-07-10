@@ -1,0 +1,286 @@
+<!-- # Copyright (c)  Tomasz Sługocki-->
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--#title-->
+
+    <title>{{title }}</title>
+    <!--/title-->
+    <!-- Pure.css framework -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+    />
+    <!-- Responsive grid system -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css"
+    />
+    <!-- Custom styles -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <style>
+      body {
+        color: #333;
+        background-color: #f8f9fa;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .cal_heat th {
+        line-height: 1;
+        font-weight: normal;
+        color: gray;
+      }
+
+      .header {
+        color: white;
+        padding: 1rem 0;
+      }
+
+      .header h1 {
+        margin: 0 0 0 2rem;
+        color: black;
+        text-align: left;
+        font-size: 1rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        min-height: 400px;
+        min-width: 850px;
+      }
+
+      /* Responsive design */
+      @media screen and (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .container {
+          padding: 0.5rem;
+        }
+
+        .content {
+          padding: 1rem;
+        }
+      }
+
+      .content {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+    <!-- Global -->
+
+    <style type="text/css">
+      .h1, h2, h3 {
+
+          font-weight:700;
+          font-size: 16px;
+      }
+
+      .bott_cal_th {
+
+          text-align: center;
+          font-size: 9px;
+          font-weight: 700;
+          color: gray;
+      }
+      .cal_heat th {
+          text-align: left;
+          border: none;
+          padding: 0px  1px 0px 1px;
+          font-size: 9px;
+          min-width: 35px;
+      }
+      .cal_heat td {
+          text-align: center;
+          border-left: #D3D3D3 1px solid;
+          border-top: #D3D3D3 1px solid;
+          padding: 0px  0px 0px 0px;
+          line-height: 7px;
+          font-size: 7px;
+          height: {{square_size}}px;
+          width: {{square_size}}px;
+          min-height: {{square_size}}px;
+          min-width: {{square_size}}px;
+          overflow: hidden;
+          color:white;
+      }
+      table.cal_heat {
+          font-family: Arial;
+          margin-bottom:10px;
+          margin-top:1px;
+          border-right: silver 1px solid;
+      }
+
+      h3.year_cal {
+          font-family: Arial;
+          margin-bottom:1px;
+          margin-top:1px;
+          padding-left: 10px;
+      }
+
+      div.rect_cal {
+          line-height:10px;
+          width:10px;
+          height:10px;
+          border-left: silver 1px solid;
+          border-top: silver 1px solid;
+
+      }
+      i.emph {
+       color:blue;
+       font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>
+          <!--[chart_title-->
+          {{title }}<!--chart_title]-->
+        </h1>
+      </header>
+
+      <main class="content">
+        <!--[chart_data-->
+        {{chart_data }}
+        <!--chart_data]-->
+      </main>
+    </div>
+
+    <script>
+      $(function () {
+        // Create and initialize tooltip element
+        const document = window.document;
+        const heatTooltip = document.createElement("div");
+        heatTooltip.id = "heat_tip";
+        document.body.appendChild(heatTooltip);
+
+        const $heatTooltip = $(heatTooltip);
+
+        const tooltipStyles = {
+          "min-width": "120px",
+          "vertical-align": "middle",
+          "font-size": "12px",
+          position: "absolute",
+          "text-align": "left",
+          background: "white",
+          padding: "2px 2px 2px 2px",
+          border: "gray 1px solid",
+          "z-index": "9999",
+          "border-radius": "1px",
+          "box-shadow": "0 2px 8px rgba(0, 0, 0, 0.15)",
+        };
+        $heatTooltip.hide();
+
+        $heatTooltip.css(tooltipStyles);
+
+        function updateTooltip(tableCell) {
+          const cellData = $(tableCell).attr("rel");
+
+          if (!cellData) {
+            $heatTooltip.hide();
+            return "";
+          }
+
+          const weekdays = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
+
+          const dataArray = cellData.split(";");
+          const dateString = dataArray[0];
+          const percentageChange = dataArray[1] || "";
+          const additionalInfo = dataArray[2] || "";
+
+          let weekdayName = "";
+
+          if (dateString) {
+            const dateComponents = dateString.split("-");
+            const year = parseInt(dateComponents[0], 10);
+            const month = parseInt(dateComponents[1], 10) - 1; // JavaScript months are 0-indexed
+            const day = parseInt(dateComponents[2], 10);
+
+            const jsDate = new Date(year, month, day);
+            weekdayName = weekdays[jsDate.getDay()];
+          }
+
+          // Get original cell background color
+          const originalColor =
+            $(tableCell).css("background-color") || "yellow";
+
+          // Create tooltip template
+          const tooltipTemplate = `
+      <p>${weekdayName}, ${dateString}</p>
+      <div class='tooltip' style="
+        float: left;
+        width: 20px;
+        height: 20px;
+        margin: 5px;
+        background: ${originalColor};
+        border: silver 1px solid;
+        border-radius: 2px;
+      "></div>
+      <span style="font-weight: 700; font-size: 20px;">${percentageChange}</span>
+      <p>${additionalInfo}</p>
+    `;
+
+          return tooltipTemplate;
+        }
+
+        $("#heat_tables").on("mouseover mouseout", "td", function (event) {
+          if (event.type === "mouseover") {
+            // Position tooltip near cursor
+            const tooltipPosition = {
+              left: event.pageX + 10,
+              top: event.pageY + 10,
+            };
+
+            $heatTooltip
+              .show()
+              .offset(tooltipPosition)
+              .html(updateTooltip(this));
+          } else if (event.type === "mouseout") {
+            // Hide tooltip on mouse leave
+            $heatTooltip.hide();
+          }
+        });
+
+        $(document).on("click", function (event) {
+          if (!$(event.target).closest("#heat_tables").length) {
+            $heatTooltip.hide();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
