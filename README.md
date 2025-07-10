@@ -190,4 +190,4 @@ This ensures optimal color mapping and visual clarity across the entire dataset.
 
 ## Author
 
-Copyright (c) Tomasz Sługocki (ts.kontakt@gmail.com)
+Copyright (c) Tomasz Sługocki
