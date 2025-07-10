@@ -10,7 +10,7 @@ Tabheatcal is a Python module that creates elegant heatmap calendars with intera
 - **Multi-Year Support**: Automatically handles datasets spanning multiple years
 - **Standalone HTML Output**: Generate self-contained HTML files for easy sharing
 
-![Example visualization](https://github.com/ts-kontakt/xlreport/blob/main/tabheatcal.gif?raw=true)
+![Example visualization](https://github.com/ts-kontakt/tabheatcal/blob/main/tabheatcal.gif?raw=true)
 
 *The visualizations use hand-crafted HTML and CSS with table-based layouts for maximum compatibility.*
 
@@ -110,11 +110,11 @@ Available color palettes include:
 ## Live Examples
 
 <p>
-<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/examples/NASDAQ.html" target="_blank">
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/NASDAQ.html" target="_blank">
 📈 NASDAQ Composite (^IXIC) Daily Calendar Heat</a>
 </p>
 <p>
-<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/examples/transactions.html" target="_blank">
+<a href="https://html-preview.github.io/?url=https://github.com/ts-kontakt/tabheatcal/blob/master/transactions.html" target="_blank">
 📊 Tesla Daily Transactions Volume</a>
 </p>
 
