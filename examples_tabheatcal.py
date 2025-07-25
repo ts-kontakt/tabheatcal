@@ -1,8 +1,86 @@
 import datetime
 import math
 
+import pandas as pd
+
 import tabheatcal as tabh
 
+
+def read_crime_csv( encoding='utf-8'):
+    """reads from https://messerinzidenz.de"""
+    import numpy as np
+    try:
+        df = pd.read_csv('https://messerinzidenz.de/csv',
+                         sep=';',
+                         quotechar='"',
+                         skipinitialspace=True,
+                         na_values=['', 'NULL', 'null'])
+
+        df.columns = df.columns.str.strip().str.replace('"', '')
+
+        string_cols = [
+            'bundesland', 'id', 'link', 'location', 'similarEntry', 'suspect', 'title', 'victim'
+        ]
+        for col in string_cols:
+            if col in df.columns:
+                df[col] = df[col].astype(str).str.strip().str.replace('"',
+                                                                      '').replace('nan', np.nan)
+
+        numeric_cols = ['hidden', 'latitude', 'longitude', 'timeOfCrimeHourOffset', 'wounded']
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+
+        date_cols = ['date', 'timeOfCrime']
+        for col in date_cols:
+            if col in df.columns:
+                df[col] = pd.to_datetime(df[col], errors='coerce')
+
+        return df
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+
+def create_crime_heatmap(df, output_file="crime_heatmap.html", title="Daily Crime Incidents"):
+    daily_counts = df.groupby(df['date'].dt.date).size().reset_index(name='count')
+
+    dates = [pd.to_datetime(date) for date in daily_counts['date']]
+    values = daily_counts['count'].tolist()
+    labels = [f"{val} incidents" for val in values]
+
+    html = tabh.table_html(dates, values, labels, palette='Blues')
+    
+    info = """
+      <small>This visualization uses data from <a href="https://messerinzidenz.de" target="_blank">messerinzidenz.de</a> and presents a daily 
+            heatmap of knife incidents in Germany. The data presented is sad and concerning, 
+            highlighting the prevalence of such crimes.</small>  
+    """
+    html = info + html
+    tabh.create_page(html, title=title, output=output_file, startfile=True)
+    
+
+def create_crime_heatmap_by_state(df, state, output_file=None, title=None):
+    state_df = df[df['bundesland'] == state]
+    daily_counts = state_df.groupby(state_df['date'].dt.date).size().reset_index(name='count')
+
+    dates = [pd.to_datetime(date) for date in daily_counts['date']]
+    values = daily_counts['count'].tolist()
+    labels = [f"{val} incid." for val in values]
+
+    if not output_file:
+        output_file = f"{state}_crime_heatmap.html"
+    if not title:
+        title = f"Daily Crime Incidents in {state}"
+
+    html = tabh.table_html(dates, values, labels, palette='Blues')
+    tabh.create_page(html, title=title, output=output_file, startfile=True)
+
+def test_crime_heatmap():
+    df = read_crime_csv( encoding='utf-8')
+    create_crime_heatmap(df, output_file="crime_heatmap.html", title="Daily Crime Incidents")
+    # create_crime_heatmap_by_state(df, 'Bayern', output_file="crime_heatmap.html", title="Daily Crime Incidents")
 
 def test_yfinance():
     from html import escape
@@ -76,9 +154,12 @@ def test_polygon():
     values = [int(x) for x in df.trans.values.tolist()]
     labels = [millify(val) if not math.isnan(val) else "n/d" for val in df.trans.values]
     html = tabh.table_html(dates, values, labels, palette='Blues')
-    tabh.create_page(html, title=f"{ticker} Daily Transactions: A Heatmap Calendar Visual", output=f"transactions.html")
+    tabh.create_page(html,
+                     title=f"{ticker} Daily Transactions: A Heatmap Calendar Visual",
+                     output=f"transactions.html")
 
 
 if __name__ == "__main__":
+    test_crime_heatmap()
     test_yfinance()
     test_polygon()
