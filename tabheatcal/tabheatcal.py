@@ -2,7 +2,7 @@
 # coding=utf-8'
 #
 # Copyright (c)  Tomasz Sługocki ts.kontakt@gmail.com
-# This code is licensed under Apache 2.0
+# This code is licensed under MIT
 import calendar
 import datetime
 import json
@@ -29,7 +29,6 @@ try:
 except ImportError:
     TEMPLATE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-# print(TEMPLATE_PATH)
 # x
 
 EMPTY_CELL = "empty"
@@ -71,15 +70,8 @@ def open_file(filename):
 
 def set_days(year, starting_month=1, end_month=12):
     mcal = calendar.Calendar()
-    weekdays_obj = {
-        6: [],
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-    }
+    weekdays_obj = {day: [] for day in WEEKDAYS_ORDER}
+
     for month in range(starting_month, end_month + 1):
         month_days = mcal.monthdatescalendar(year, month)
         for row in month_days:
@@ -160,8 +152,8 @@ def year_table(current_year, start_month=1, end_month=12, color_object=None):
 
             cell_inner_html = "."
             if is_empty:
-                cell_inner_html = "@"
-                cell_style = "border:white 1px solid;"
+                cell_inner_html = "_"
+                cell_style = "border:white 1px solid;color:white;"
 
             table_cell = make_cell(
                 cell_inner_html, style=cell_style, rel=date_display_string
@@ -243,18 +235,18 @@ def get_colorkey(colors, divisions, values, labels):
     ticks = 9
     tick_step = val_range / float(ticks)
     current = max_val
-    height, width, float_style = 2, 20, "None"
+    height, width, float_style = 2, 1.5, "None"
     css = f"""
     <style type="text/css">
     div.color_key {{
-        font-size:1px;height:{height}px;width:{width}px;
+        font-size:1px;height:{height}px;width:{width}rem;
         margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;
         display:block;float:{float_style};
     }}
     div.colorkey_tick {{
-      font-weight:700;
+      font-weight:600;
       position:absolute;
-      font-size:12px;
+      font-size:0.7rem;
     }}
     </style>
     """
@@ -265,8 +257,6 @@ def get_colorkey(colors, divisions, values, labels):
     # mid_label = labels[values.index(np.median(values))]
     mid_label = labels[np.argsort(values)[len(values) // 2]]
 
-    # print(mid_label)
-    # stop
     tick_html += f"""<div class="colorkey_tick"
             style="top:49%;right:0;"> {mid_label}</div>"""
     for i in range(ticks - 1):
@@ -275,7 +265,6 @@ def get_colorkey(colors, divisions, values, labels):
             style="bottom:-0.5em;right:0;">
             {min_label}</div>"""
     data = {"max": max_val, "min": min_val, "rng": val_range}
-    # print(data)
     json_str = json.dumps(data, separators=(",", ":"))
     script = f'\n<script type="text/javascript"> var COLOR_KEY={json_str};</script>'
     divs = ""
@@ -284,7 +273,7 @@ def get_colorkey(colors, divisions, values, labels):
             div = f'<div id="legend_wrapper" class="color_key" style="background:{color};">.</div>'
             divs += div
     html = f"""{css}{script}
-        <div style="text-align:left;width:75px;position:relative;">
+        <div id="right_legend" style="text-align:left;min-width:4rem;position:relative;">
         <div id="color_key_wrapper"> {divs} </div>
          {tick_html}
          </div>
@@ -337,9 +326,6 @@ def table_html(dates, values, labels, palette="RdYlGn"):
     " ".join(labels)
     max_value = np.nanmax(values)
     min_value = np.nanmin(values)
-
-    # print(max_value, min_value)
-    # stop
     year_dict = {}
     special_dates = {}
 
@@ -367,7 +353,7 @@ def table_html(dates, values, labels, palette="RdYlGn"):
             cellpadding="0" cellspacing="0">
             <tr>
               <td id="heat_tables">%s</td>
-              <td id="color_wrap" style="vertical-align:top;padding:23px 0px 0px 10px;">%s</td>
+              <td id="color_wrap" style="vertical-align:top;padding:2.4rem 0px 0px 2rem;">%s</td>
             </tr>
         </table>""" % ("\n".join(table_list), colorkey)
     return minify(final_html)
@@ -381,10 +367,10 @@ def create_page(html, title, output="output.html", startfile=True):
         {
             "title": title,
             "chart_data": html,
-            "square_size": SQUARE_SIZE,
+            # "square_size": f'{SQUARE_SIZE}px',
         }
     )
-    with open(output, "w", encoding='utf8') as f:
+    with open(output, "w", encoding="utf8") as f:
         f.write(result)
     open_file(output)
 
@@ -421,7 +407,6 @@ def test_heatmap():
     all_days = pd.date_range(df.index.min(), df.index.max(), freq="D")
     full_df = df.reindex(all_days)
     selected = full_df["2021-01-01":"2025-12-31"]
-    # print(selected)
     dates = [pd.to_datetime(date).date() for date in selected.index.values]
     values = selected.p_chng.values.tolist()
     labels = [
