@@ -1,9 +1,5 @@
 # tabheatcal - Heatmap Calendar Visualization with Interactive Value Inspection
 
-```bash
-pip install tabheatcal
-```
-
 Tabheatcal is a Python module that creates elegant heatmap calendars with interactive value inspection capabilities. Perfect for visualizing time-series data like stock prices, transaction volumes, or any daily metrics over time.
 
 ## Features
@@ -17,6 +13,12 @@ Tabheatcal is a Python module that creates elegant heatmap calendars with intera
 ![Example visualization](https://github.com/ts-kontakt/tabheatcal/blob/main/tabheatcal.gif?raw=true)
 
 *The visualizations use hand-crafted HTML and CSS with table-based layouts for maximum compatibility.*
+
+
+### Installation
+```bash
+pip install tabheatcal
+```
 
 ## Quick Start
 
@@ -143,16 +145,6 @@ tabheatcal.demo()  # Creates a demo with random data
 - `pandas` - For data manipulation (in examples)
 - `yfinance` - For stock data (in examples)
 
-## Installation
-
-```bash
-pip install numpy jinja2
-```
-
-For the examples, also install:
-```bash
-pip install pandas yfinance
-```
 
 ## Output
 
